@@ -405,182 +405,166 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const senhaCorreta = "admin123";
+    const senhaCorreta = "admin123";
 
-      function salvarLocalStorage(chamados) {
-        localStorage.setItem('chamados', JSON.stringify(chamados));
-      }
+    // Carrega os chamados do localStorage (ou retorna array vazio)
+    function carregarChamados() {
+      const dados = localStorage.getItem('chamados');
+      return dados ? JSON.parse(dados) : [];
+    }
 
-      function carregarChamados() {
-        return JSON.parse(localStorage.getItem('chamados') || '[]');
-      }
+    // Salva os chamados no localStorage
+    function salvarChamados(lista) {
+      localStorage.setItem('chamados', JSON.stringify(lista));
+    }
 
-      function toggleView(viewId) {
-        ['formView', 'adminView', 'senhaAdmin'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.style.display = 'none';
-        });
-        const view = document.getElementById(viewId);
-        if (view) view.style.display = 'flex';
-      }
-
-      function mostrarCampoSenha() {
-        toggleView('senhaAdmin');
-      }
-
-      function validarSenha() {
-        const senha = document.getElementById("senha").value;
-        if (senha === senhaCorreta) {
-          toggleView('adminView');
-          atualizarTabela();
-        } else {
-          alert("Senha incorreta.");
-        }
-      }
-
-      function enviarFormulario() {
-        const nome = document.getElementById("nome").value.trim();
-        const cargo = document.getElementById("cargo").value;
-        const plataforma = document.getElementById("plataforma").value;
-        const motivo = document.getElementById("motivo").value;
-        const obs = document.getElementById("obs").value.trim();
-
-        if (!nome) {
-          alert("Por favor, preencha o nome.");
-          return;
-        }
-
-        const dataAtual = new Date();
-        const data = dataAtual.toLocaleDateString('pt-BR');
-        const hora = dataAtual.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-        const registro = {
-          nome,
-          cargo,
-          plataforma,
-          motivo,
-          obs,
-          data,
-          hora,
-          status: "Pendente"
-        };
-
-        // Carrega, atualiza, salva novamente
-        const chamados = carregarChamados();
-        chamados.push(registro);
-        salvarLocalStorage(chamados);
-        atualizarTabela();
-
-        document.querySelectorAll('#formView input, #formView textarea').forEach(el => el.value = '');
-        document.getElementById("notificacao").textContent = "✅ Chamado registrado com sucesso!";
-        setTimeout(() => document.getElementById("notificacao").textContent = "", 4000);
-      }
-
-      function marcarTratativa(index) {
-        const chamados = carregarChamados();
-        if (chamados[index]) {
-          chamados[index].status = "Em tratativa";
-          salvarLocalStorage(chamados);
-          atualizarTabela();
-        }
-      }
-
-      function resolverChamado(index) {
-        const chamados = carregarChamados();
-        if (chamados[index]) {
-          chamados[index].status = "Resolvido";
-          salvarLocalStorage(chamados);
-          atualizarTabela();
-        }
-      }
-
-      function atualizarTabela() {
-        const chamados = carregarChamados();
-
-        const filtroStatus = document.getElementById("filtroStatus")?.value || "Todos";
-        const filtroPlataforma = document.getElementById("filtroPlataforma")?.value || "Todas";
-        const buscaNome = document.getElementById("buscaNome")?.value.toLowerCase() || "";
-
-        const tbody = document.querySelector("#tabelaChamados tbody");
-        tbody.innerHTML = "";
-
-        chamados.forEach((c, i) => {
-          if (filtroStatus !== "Todos" && c.status !== filtroStatus) return;
-          if (filtroPlataforma !== "Todas" && c.plataforma !== filtroPlataforma) return;
-          if (buscaNome && !c.nome.toLowerCase().includes(buscaNome)) return;
-
-          const tr = document.createElement("tr");
-          tr.className = c.status === "Pendente" ? "pendente"
-            : c.status === "Em tratativa" ? "tratativa"
-            : "resolvido";
-
-          tr.innerHTML = `
-            <td>${c.nome}</td>
-            <td>${c.cargo}</td>
-            <td>${c.plataforma}</td>
-            <td>${c.motivo}</td>
-            <td>${c.obs}</td>
-            <td>${c.data}</td>
-            <td>${c.hora}</td>
-            <td>${c.status}</td>
-            <td>
-  ${
-    c.status !== "Resolvido"
-      ? `<button class="btn-table" onclick="marcarTratativa(${i})" aria-label="Marcar chamado como em tratativa">🔧 Tratativa</button>
-         <button class="btn-table" onclick="resolverChamado(${i})" aria-label="Marcar chamado como resolvido">✔️ Resolver</button>`
-      : '—'
-  }
-</td>
-
-          `;
-          tbody.appendChild(tr);
-        });
-      }
-
-      function filtrarChamados() {
-        atualizarTabela();
-      }
-
-      function exportarExcel() {
-        const chamados = carregarChamados();
-
-        const filtroStatus = document.getElementById("filtroStatus")?.value || "Todos";
-        const filtroPlataforma = document.getElementById("filtroPlataforma")?.value || "Todas";
-        const buscaNome = document.getElementById("buscaNome")?.value.toLowerCase() || "";
-
-        const dadosFiltrados = chamados.filter((c) => {
-          if (filtroStatus !== "Todos" && c.status !== filtroStatus) return false;
-          if (filtroPlataforma !== "Todas" && c.plataforma !== filtroPlataforma) return false;
-          if (buscaNome && !c.nome.toLowerCase().includes(buscaNome)) return false;
-          return true;
-        });
-
-        if (dadosFiltrados.length === 0) {
-          alert("Nenhum registro para exportar.");
-          return;
-        }
-
-        const ws = XLSX.utils.json_to_sheet(dadosFiltrados);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Chamados");
-        XLSX.writeFile(wb, "diario_de_bordo_filtrado.xlsx");
-      }
-
-      // Expõe as funções globalmente para os botões funcionarem
-      window.toggleView = toggleView;
-      window.mostrarCampoSenha = mostrarCampoSenha;
-      window.validarSenha = validarSenha;
-      window.enviarFormulario = enviarFormulario;
-      window.marcarTratativa = marcarTratativa;
-      window.resolverChamado = resolverChamado;
-      window.filtrarChamados = filtrarChamados;
-      window.exportarExcel = exportarExcel;
-
-      // Inicializa exibindo o formulário e atualizando tabela
-      toggleView('formView');
+    // Adiciona um chamado (usado internamente e externamente)
+    function adicionarChamadoExterno(chamado) {
+      const chamados = carregarChamados();
+      chamados.push(chamado);
+      salvarChamados(chamados);
       atualizarTabela();
-    });
+    }
+
+    function toggleView(viewId) {
+      document.getElementById('formView').style.display = 'none';
+      document.getElementById('adminView').style.display = 'none';
+      document.getElementById('senhaAdmin').style.display = 'none';
+      document.getElementById(viewId).style.display = 'flex';
+    }
+
+    function mostrarCampoSenha() {
+      toggleView('senhaAdmin');
+    }
+
+    function validarSenha() {
+      const senha = document.getElementById("senha").value;
+      if (senha === senhaCorreta) {
+        toggleView('adminView');
+        atualizarTabela();
+      } else {
+        alert("Senha incorreta.");
+      }
+    }
+
+    function enviarFormulario() {
+      const nome = document.getElementById("nome").value.trim();
+      const cargo = document.getElementById("cargo").value;
+      const plataforma = document.getElementById("plataforma").value;
+      const motivo = document.getElementById("motivo").value;
+      const obs = document.getElementById("obs").value.trim();
+
+      if (!nome) {
+        alert("Por favor, preencha o nome.");
+        return;
+      }
+
+      const dataAtual = new Date();
+      const data = dataAtual.toLocaleDateString('pt-BR');
+      const hora = dataAtual.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+      const registro = {
+        nome,
+        cargo,
+        plataforma,
+        motivo,
+        obs,
+        data,
+        hora,
+        status: "Pendente"
+      };
+
+      adicionarChamadoExterno(registro);
+
+      // Limpar campos
+      document.querySelectorAll('#formView input[type=text], #formView textarea').forEach(el => el.value = '');
+      document.getElementById("notificacao").textContent = "✅ Chamado registrado com sucesso!";
+      setTimeout(() => document.getElementById("notificacao").textContent = "", 4000);
+    }
+
+    function marcarTratativa(index) {
+      const chamados = carregarChamados();
+      chamados[index].status = "Em tratativa";
+      salvarChamados(chamados);
+      atualizarTabela();
+    }
+
+    function resolverChamado(index) {
+      const chamados = carregarChamados();
+      chamados[index].status = "Resolvido";
+      salvarChamados(chamados);
+      atualizarTabela();
+    }
+
+    function atualizarTabela() {
+      const filtroStatus = document.getElementById("filtroStatus")?.value || "Todos";
+      const filtroPlataforma = document.getElementById("filtroPlataforma")?.value || "Todas";
+      const buscaNome = document.getElementById("buscaNome")?.value.toLowerCase() || "";
+
+      const chamados = carregarChamados();
+      const tbody = document.querySelector("#tabelaChamados tbody");
+      tbody.innerHTML = "";
+
+      chamados.forEach((c, i) => {
+        if (filtroStatus !== "Todos" && c.status !== filtroStatus) return;
+        if (filtroPlataforma !== "Todas" && c.plataforma !== filtroPlataforma) return;
+        if (buscaNome && !c.nome.toLowerCase().includes(buscaNome)) return;
+
+        const tr = document.createElement("tr");
+        tr.className = c.status === "Pendente" ? "pendente"
+          : c.status === "Em tratativa" ? "tratativa"
+          : "resolvido";
+
+        tr.innerHTML = `
+          <td>${c.nome}</td>
+          <td>${c.cargo}</td>
+          <td>${c.plataforma}</td>
+          <td>${c.motivo}</td>
+          <td>${c.obs}</td>
+          <td>${c.data}</td>
+          <td>${c.hora}</td>
+          <td>${c.status}</td>
+          <td>
+            <button class="btn-table" onclick="marcarTratativa(${i})">Em tratativa</button>
+            <button class="btn-table" onclick="resolverChamado(${i})">Resolvido</button>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Exporta os chamados filtrados para Excel
+    function exportarExcel() {
+      const chamados = carregarChamados();
+
+      // Filtra conforme os filtros ativos
+      const filtroStatus = document.getElementById("filtroStatus").value;
+      const filtroPlataforma = document.getElementById("filtroPlataforma").value;
+      const buscaNome = document.getElementById("buscaNome").value.toLowerCase();
+
+      const filtrados = chamados.filter(c => {
+        if (filtroStatus !== "Todos" && c.status !== filtroStatus) return false;
+        if (filtroPlataforma !== "Todas" && c.plataforma !== filtroPlataforma) return false;
+        if (buscaNome && !c.nome.toLowerCase().includes(buscaNome)) return false;
+        return true;
+      });
+
+      // Monta os dados para Excel
+      const ws_data = [
+        ["Nome", "Cargo", "Plataforma", "Motivo", "Observações", "Data", "Hora", "Status"],
+        ...filtrados.map(c => [c.nome, c.cargo, c.plataforma, c.motivo, c.obs, c.data, c.hora, c.status])
+      ];
+
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      XLSX.utils.book_append_sheet(wb, ws, "Chamados");
+
+      XLSX.writeFile(wb, "diario_de_bordo.xlsx");
+    }
+
+    // Inicializa mostrando o formulário
+    toggleView('formView');
   </script>
 </body>
 </html>
