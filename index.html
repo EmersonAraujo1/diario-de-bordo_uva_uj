@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Diário de Bordo - Corporativo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -67,6 +68,7 @@
       margin-top: 0.4rem;
       border: 1px solid #ccc;
       border-radius: 5px;
+      box-sizing: border-box;
     }
 
     button {
@@ -78,6 +80,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
@@ -88,6 +91,7 @@
       margin-top: 1rem;
       font-weight: bold;
       color: green;
+      min-height: 1.5em;
     }
 
     table {
@@ -100,6 +104,7 @@
       padding: 0.6rem;
       text-align: left;
       border-bottom: 1px solid #ddd;
+      word-break: break-word;
     }
 
     th {
@@ -130,6 +135,32 @@
     .btn-table:hover {
       background-color: #5a6268;
     }
+
+    .charts {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .chart-container {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    /* Flex container for filters */
+    #adminView > div.filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    #adminView > div.filters > div {
+      flex: 1 1 150px;
+      min-width: 150px;
+    }
+
   </style>
 </head>
 <body>
@@ -144,24 +175,37 @@
   </nav>
 
   <!-- FORMULÁRIO -->
-  <div id="formView">
+  <div id="formView" style="display:flex; flex-direction: column;">
     <h2>Registro - Diário de Bordo</h2>
     <label for="nome">Nome:</label>
-    <input type="text" id="nome" required>
+    <input type="text" id="nome" required />
 
     <label for="cargo">Cargo:</label>
     <select id="cargo">
-      <option>Consultor</option><option>Assistente</option><option>Analista</option><option>Coordenador</option><option>Gerência</option>
+      <option>Consultor</option>
+      <option>Assistente</option>
+      <option>Analista</option>
+      <option>Coordenador</option>
+      <option>Gerência</option>
     </select>
 
     <label for="plataforma">Plataforma:</label>
     <select id="plataforma">
-      <option>Botmaker</option><option>Olos</option><option>Eaglle</option><option>Lyceum</option><option>Internet</option>
+      <option>Botmaker</option>
+      <option>Olos</option>
+      <option>Eaglle</option>
+      <option>Lyceum</option>
+      <option>Internet</option>
     </select>
 
     <label for="motivo">Motivo do chamado:</label>
     <select id="motivo">
-      <option>Queda</option><option>Instabilidade</option><option>Não consigo acessar</option><option>Sem internet</option><option>Não consigo conectar</option><option>Outro</option>
+      <option>Queda</option>
+      <option>Instabilidade</option>
+      <option>Não consigo acessar</option>
+      <option>Sem internet</option>
+      <option>Não consigo conectar</option>
+      <option>Outro</option>
     </select>
 
     <label for="obs">Observações:</label>
@@ -172,39 +216,65 @@
   </div>
 
   <!-- SENHA ADMIN -->
-  <div id="senhaAdmin">
+  <div id="senhaAdmin" style="display:none; flex-direction: column;">
     <h2>🔐 Acesso Restrito</h2>
     <label for="senha">Senha de administrador:</label>
-    <input type="password" id="senha" placeholder="Senha">
+    <input type="password" id="senha" placeholder="Senha" />
     <button onclick="validarSenha()">Entrar</button>
   </div>
 
   <!-- PAINEL ADMIN -->
-  <div id="adminView">
+  <div id="adminView" style="display:none; flex-direction: column;">
     <h2>📊 Painel Administrativo</h2>
-    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
-      <div style="flex: 1;">
-        <label>Status:</label>
-        <select id="filtroStatus" onchange="filtrarChamados()">
-          <option value="Todos">Todos</option><option>Pendente</option><option>Em tratativa</option><option>Resolvido</option>
-        </select>
+
+    <div class="charts">
+      <div class="chart-container">
+        <canvas id="chartStatus"></canvas>
       </div>
-      <div style="flex: 1;">
-        <label>Plataforma:</label>
-        <select id="filtroPlataforma" onchange="filtrarChamados()">
-          <option value="Todas">Todas</option><option>Botmaker</option><option>Olos</option><option>Eaglle</option><option>Lyceum</option><option>Internet</option>
-        </select>
-      </div>
-      <div style="flex: 2;">
-        <label>Buscar por nome:</label>
-        <input type="text" id="buscaNome" oninput="filtrarChamados()" placeholder="Digite um nome">
+      <div class="chart-container">
+        <canvas id="chartPlataforma"></canvas>
       </div>
     </div>
 
-    <table id="tabelaChamados">
+    <div class="filters">
+      <div>
+        <label for="filtroStatus">Status:</label>
+        <select id="filtroStatus" onchange="filtrarChamados()">
+          <option value="Todos">Todos</option>
+          <option>Pendente</option>
+          <option>Em tratativa</option>
+          <option>Resolvido</option>
+        </select>
+      </div>
+      <div>
+        <label for="filtroPlataforma">Plataforma:</label>
+        <select id="filtroPlataforma" onchange="filtrarChamados()">
+          <option value="Todas">Todas</option>
+          <option>Botmaker</option>
+          <option>Olos</option>
+          <option>Eaglle</option>
+          <option>Lyceum</option>
+          <option>Internet</option>
+        </select>
+      </div>
+      <div style="flex: 2 1 300px;">
+        <label for="buscaNome">Buscar por nome:</label>
+        <input type="text" id="buscaNome" oninput="filtrarChamados()" placeholder="Digite um nome" />
+      </div>
+    </div>
+
+    <table id="tabelaChamados" aria-label="Tabela de chamados">
       <thead>
         <tr>
-          <th>Nome</th><th>Cargo</th><th>Plataforma</th><th>Motivo</th><th>Obs</th><th>Data</th><th>Hora</th><th>Status</th><th>Ações</th>
+          <th>Nome</th>
+          <th>Cargo</th>
+          <th>Plataforma</th>
+          <th>Motivo</th>
+          <th>Obs</th>
+          <th>Data</th>
+          <th>Hora</th>
+          <th>Status</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -235,7 +305,6 @@
       if (!nome) return alert("Preencha o nome.");
 
       const registro = {
-        id: Date.now() + "-" + Math.floor(Math.random() * 1000),
         nome,
         cargo: document.getElementById("cargo").value,
         plataforma: document.getElementById("plataforma").value,
@@ -252,7 +321,13 @@
           body: JSON.stringify(registro),
           headers: { "Content-Type": "application/json" }
         });
-        if (!res.ok) throw new Error("Erro ao enviar os dados.");
+        const json = await res.json();
+        if (!res.ok || json.error) throw new Error(json.error || "Erro ao enviar os dados.");
+
+        // O backend retorna o id criado
+        registro.id = json.id;
+
+        chamados.push(registro);
 
         document.querySelectorAll('#formView input, #formView textarea').forEach(el => el.value = '');
         document.getElementById("notificacao").textContent = "✅ Chamado registrado!";
@@ -267,6 +342,7 @@
         const res = await fetch(GOOGLE_SHEET_WEBAPP_URL);
         chamados = await res.json();
         filtrarChamados();
+        renderizarGraficos();
       } catch {
         alert("Erro ao buscar chamados.");
       }
@@ -306,14 +382,18 @@
 
     const alterarStatus = async (id, status) => {
       try {
-        await fetch(GOOGLE_SHEET_WEBAPP_URL, {
+        const res = await fetch(GOOGLE_SHEET_WEBAPP_URL, {
           method: "POST",
           body: JSON.stringify({ id, status }),
           headers: { "Content-Type": "application/json" }
         });
+        const json = await res.json();
+        if (!res.ok || json.error) throw new Error(json.error || "Erro ao atualizar status.");
+
         const chamado = chamados.find(c => c.id === id);
         if (chamado) chamado.status = status;
         filtrarChamados();
+        renderizarGraficos();
       } catch {
         alert("Erro ao atualizar status.");
       }
@@ -327,8 +407,15 @@
 
     const exportarExcel = () => {
       const dados = chamados.map(c => ({
-        Protocolo: c.id, Nome: c.nome, Cargo: c.cargo, Plataforma: c.plataforma,
-        Motivo: c.motivo, Observações: c.obs, Data: c.data, Hora: c.hora, Status: c.status
+        Protocolo: c.id,
+        Nome: c.nome,
+        Cargo: c.cargo,
+        Plataforma: c.plataforma,
+        Motivo: c.motivo,
+        Observações: c.obs,
+        Data: c.data,
+        Hora: c.hora,
+        Status: c.status
       }));
       const ws = XLSX.utils.json_to_sheet(dados);
       const wb = XLSX.utils.book_new();
@@ -336,7 +423,70 @@
       XLSX.writeFile(wb, "DiarioDeBordo.xlsx");
     };
 
-    window.onload = () => toggleView('formView');
+    let chartStatusInstance = null;
+    let chartPlataformaInstance = null;
+
+    const renderizarGraficos = () => {
+      const statusContagem = {};
+      const plataformaContagem = {};
+
+      chamados.forEach(c => {
+        statusContagem[c.status] = (statusContagem[c.status] || 0) + 1;
+        plataformaContagem[c.plataforma] = (plataformaContagem[c.plataforma] || 0) + 1;
+      });
+
+      // Destroy old charts if exist
+      if (chartStatusInstance) chartStatusInstance.destroy();
+      if (chartPlataformaInstance) chartPlataformaInstance.destroy();
+
+      const ctxStatus = document.getElementById('chartStatus').getContext('2d');
+      chartStatusInstance = new Chart(ctxStatus, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(statusContagem),
+          datasets: [{
+            label: 'Status',
+            data: Object.values(statusContagem),
+            backgroundColor: ['#ffc107', '#17a2b8', '#28a745'],
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' },
+            title: { display: true, text: 'Distribuição por Status' }
+          }
+        }
+      });
+
+      const ctxPlataforma = document.getElementById('chartPlataforma').getContext('2d');
+      chartPlataformaInstance = new Chart(ctxPlataforma, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(plataformaContagem),
+          datasets: [{
+            label: 'Plataforma',
+            data: Object.values(plataformaContagem),
+            backgroundColor: '#007bff',
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Distribuição por Plataforma' }
+          },
+          scales: {
+            y: { beginAtZero: true, precision: 0 }
+          }
+        }
+      });
+    };
+
+    window.onload = () => {
+      toggleView('formView');
+    };
   </script>
 </body>
 </html>
+   
