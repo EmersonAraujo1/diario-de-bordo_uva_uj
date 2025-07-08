@@ -1,128 +1,245 @@
-<script>
-  const senhaCorreta = "admin123";
-  const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyaUlvGoiPbYjrfoPHarYnEV4fcx2gzeE-v3cbESxowFXo1V93gBBnp_RUr_Y7M8Zqg/exec";
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Diário de Bordo - Corporativo</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* estilos omitidos por brevidade - iguais aos anteriores fornecidos */
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo uva">Universidade Veiga de Almeida</div>
+    <div class="logo unijorge">Unijorge</div>
+  </header>
+  <nav>
+    <button onclick="toggleView('formView')">📋 Diário de Bordo</button>
+    <button onclick="mostrarCampoSenha()">🔒 Admin</button>
+  </nav>
 
-  function toggleView(viewId) {
-    document.getElementById('formView').style.display = 'none';
-    document.getElementById('adminView').style.display = 'none';
-    document.getElementById('senhaAdmin').style.display = 'none';
-    document.getElementById(viewId).style.display = 'flex';
-  }
+  <div id="formView">
+    <h2>Registro - Diário de Bordo</h2>
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" autocomplete="off" />
 
-  function mostrarCampoSenha() {
-    toggleView('senhaAdmin');
-  }
+    <label for="cargo">Cargo:</label>
+    <select id="cargo">
+      <option>Consultor</option>
+      <option>Assistente</option>
+      <option>Analista</option>
+      <option>Coordenador</option>
+      <option>Gerência</option>
+    </select>
 
-  function validarSenha() {
-    const senha = document.getElementById("senha").value;
-    if (senha === senhaCorreta) {
-      toggleView('adminView');
-      atualizarTabela();
-    } else {
-      alert("Senha incorreta.");
+    <label for="plataforma">Plataforma:</label>
+    <select id="plataforma">
+      <option>Botmaker</option>
+      <option>Olos</option>
+      <option>Eaglle</option>
+      <option>Lyceum</option>
+      <option>Internet</option>
+    </select>
+
+    <label for="motivo">Motivo do chamado:</label>
+    <select id="motivo">
+      <option>Queda</option>
+      <option>Instabilidade</option>
+      <option>Não consigo acessar</option>
+      <option>Sem internet</option>
+      <option>Não consigo conectar</option>
+      <option>Outro</option>
+    </select>
+
+    <label for="obs">Observações:</label>
+    <textarea id="obs" rows="3"></textarea>
+
+    <button onclick="enviarFormulario()">🚀 Enviar</button>
+    <div id="notificacao"></div>
+  </div>
+
+  <div id="senhaAdmin">
+    <h2>🔐 Acesso Restrito</h2>
+    <label for="senha">Digite a senha de administrador:</label>
+    <input type="password" id="senha" placeholder="Senha" autocomplete="off" />
+    <button onclick="validarSenha()">Entrar</button>
+  </div>
+
+  <div id="adminView">
+    <h2>📊 Painel Administrativo</h2>
+    <div>
+      <label for="filtroStatus">Filtrar por status:</label>
+      <select id="filtroStatus" onchange="atualizarTabela()">
+        <option value="Todos">Todos</option>
+        <option value="Pendente">Pendente</option>
+        <option value="Em tratativa">Em tratativa</option>
+        <option value="Resolvido">Resolvido</option>
+      </select>
+
+      <label for="filtroPlataforma">Plataforma:</label>
+      <select id="filtroPlataforma" onchange="atualizarTabela()">
+        <option value="Todas">Todas</option>
+        <option>Botmaker</option>
+        <option>Olos</option>
+        <option>Eaglle</option>
+        <option>Lyceum</option>
+        <option>Internet</option>
+      </select>
+
+      <label for="buscaNome">Buscar por nome:</label>
+      <input type="text" id="buscaNome" oninput="atualizarTabela()" placeholder="Digite um nome" />
+    </div>
+
+    <table id="tabelaChamados" aria-label="Tabela de chamados">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Cargo</th>
+          <th>Plataforma</th>
+          <th>Motivo</th>
+          <th>Obs</th>
+          <th>Data</th>
+          <th>Hora</th>
+          <th>Status</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button onclick="exportarExcel()">📄 Exportar para Excel</button>
+  </div>
+
+  <script>
+    const senhaCorreta = "admin123";
+    const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyaUlvGoiPbYjrfoPHarYnEV4fcx2gzeE-v3cbESxowFXo1V93gBBnp_RUr_Y7M8Zqg/exec";
+
+    function toggleView(viewId) {
+      document.getElementById('formView').style.display = 'none';
+      document.getElementById('adminView').style.display = 'none';
+      document.getElementById('senhaAdmin').style.display = 'none';
+      document.getElementById(viewId).style.display = 'flex';
     }
-  }
 
-  function enviarFormulario() {
-    const nome = document.getElementById("nome").value.trim();
-    const cargo = document.getElementById("cargo").value;
-    const plataforma = document.getElementById("plataforma").value;
-    const motivo = document.getElementById("motivo").value;
-    const obs = document.getElementById("obs").value.trim();
-
-    if (!nome) {
-      alert("Por favor, preencha o nome.");
-      return;
+    function mostrarCampoSenha() {
+      toggleView('senhaAdmin');
     }
 
-    const dataAtual = new Date();
-    const data = dataAtual.toLocaleDateString('pt-BR');
-    const hora = dataAtual.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-    const registro = {
-      nome, cargo, plataforma, motivo, obs, data, hora, status: "Pendente"
-    };
-
-    fetch(GOOGLE_SHEET_WEBAPP_URL, {
-      method: "POST",
-      body: JSON.stringify(registro),
-      headers: { "Content-Type": "application/json" }
-    })
-    .then(res => {
-      if (res.ok) {
-        document.querySelectorAll('#formView input[type=text], #formView textarea').forEach(el => el.value = '');
-        document.getElementById("notificacao").textContent = "✅ Chamado registrado com sucesso!";
-        setTimeout(() => document.getElementById("notificacao").textContent = "", 4000);
+    function validarSenha() {
+      const senha = document.getElementById("senha").value;
+      if (senha === senhaCorreta) {
+        toggleView('adminView');
+        atualizarTabela();
       } else {
-        alert("Erro ao enviar os dados.");
+        alert("Senha incorreta.");
       }
-    })
-    .catch(() => alert("Erro na conexão com o Google Sheets."));
-  }
+    }
 
-  function atualizarTabela() {
-    fetch(GOOGLE_SHEET_WEBAPP_URL)
-      .then(res => res.json())
-      .then(chamados => {
-        const filtroStatus = document.getElementById("filtroStatus")?.value || "Todos";
-        const filtroPlataforma = document.getElementById("filtroPlataforma")?.value || "Todas";
-        const buscaNome = document.getElementById("buscaNome")?.value.toLowerCase() || "";
+    function enviarFormulario() {
+      const nome = document.getElementById("nome").value.trim();
+      const cargo = document.getElementById("cargo").value;
+      const plataforma = document.getElementById("plataforma").value;
+      const motivo = document.getElementById("motivo").value;
+      const obs = document.getElementById("obs").value.trim();
 
-        const tbody = document.querySelector("#tabelaChamados tbody");
-        tbody.innerHTML = "";
+      if (!nome) {
+        alert("Por favor, preencha o nome.");
+        return;
+      }
 
-        chamados.forEach((c, i) => {
-          if (filtroStatus !== "Todos" && c.status !== filtroStatus) return;
-          if (filtroPlataforma !== "Todas" && c.plataforma !== filtroPlataforma) return;
-          if (buscaNome && !c.nome.toLowerCase().includes(buscaNome)) return;
+      const dataAtual = new Date();
+      const data = dataAtual.toLocaleDateString('pt-BR');
+      const hora = dataAtual.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-          const tr = document.createElement("tr");
-          tr.className = c.status === "Pendente" ? "pendente"
-            : c.status === "Em tratativa" ? "tratativa"
-            : "resolvido";
+      const registro = {
+        nome, cargo, plataforma, motivo, obs, data, hora, status: "Pendente"
+      };
 
-          tr.innerHTML = `
-            <td>${c.nome}</td>
-            <td>${c.cargo}</td>
-            <td>${c.plataforma}</td>
-            <td>${c.motivo}</td>
-            <td>${c.obs}</td>
-            <td>${c.data}</td>
-            <td>${c.hora}</td>
-            <td>${c.status}</td>
-            <td>🔒</td>
-          `;
-          tbody.appendChild(tr);
+      fetch(GOOGLE_SHEET_WEBAPP_URL, {
+        method: "POST",
+        body: JSON.stringify(registro),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => {
+        if (res.ok) {
+          document.querySelectorAll('#formView input[type=text], #formView textarea').forEach(el => el.value = '');
+          document.getElementById("notificacao").textContent = "✅ Chamado registrado com sucesso!";
+          setTimeout(() => document.getElementById("notificacao").textContent = "", 4000);
+        } else {
+          alert("Erro ao enviar os dados.");
+        }
+      })
+      .catch(() => alert("Erro na conexão com o Google Sheets."));
+    }
+
+    function atualizarStatus(index, novoStatus) {
+      fetch(GOOGLE_SHEET_WEBAPP_URL + `?action=update&index=${index}&status=${encodeURIComponent(novoStatus)}`)
+        .then(res => res.ok ? atualizarTabela() : alert("Erro ao atualizar o status."));
+    }
+
+    function atualizarTabela() {
+      fetch(GOOGLE_SHEET_WEBAPP_URL)
+        .then(res => res.json())
+        .then(chamados => {
+          const filtroStatus = document.getElementById("filtroStatus").value;
+          const filtroPlataforma = document.getElementById("filtroPlataforma").value;
+          const buscaNome = document.getElementById("buscaNome").value.toLowerCase();
+
+          const tbody = document.querySelector("#tabelaChamados tbody");
+          tbody.innerHTML = "";
+
+          chamados.forEach((c, i) => {
+            if (filtroStatus !== "Todos" && c.status !== filtroStatus) return;
+            if (filtroPlataforma !== "Todas" && c.plataforma !== filtroPlataforma) return;
+            if (buscaNome && !c.nome.toLowerCase().includes(buscaNome)) return;
+
+            const tr = document.createElement("tr");
+            tr.className = c.status === "Pendente" ? "pendente" : c.status === "Em tratativa" ? "tratativa" : "resolvido";
+            tr.innerHTML = `
+              <td>${c.nome}</td>
+              <td>${c.cargo}</td>
+              <td>${c.plataforma}</td>
+              <td>${c.motivo}</td>
+              <td>${c.obs}</td>
+              <td>${c.data}</td>
+              <td>${c.hora}</td>
+              <td>${c.status}</td>
+              <td>
+                <button class="btn-table" onclick="atualizarStatus(${i}, 'Em tratativa')">Em tratativa</button>
+                <button class="btn-table" onclick="atualizarStatus(${i}, 'Resolvido')">Resolvido</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
         });
-      });
-  }
+    }
 
-  function exportarExcel() {
-    fetch(GOOGLE_SHEET_WEBAPP_URL)
-      .then(res => res.json())
-      .then(chamados => {
-        const filtroStatus = document.getElementById("filtroStatus").value;
-        const filtroPlataforma = document.getElementById("filtroPlataforma").value;
-        const buscaNome = document.getElementById("buscaNome").value.toLowerCase();
+    function exportarExcel() {
+      fetch(GOOGLE_SHEET_WEBAPP_URL)
+        .then(res => res.json())
+        .then(chamados => {
+          const filtroStatus = document.getElementById("filtroStatus").value;
+          const filtroPlataforma = document.getElementById("filtroPlataforma").value;
+          const buscaNome = document.getElementById("buscaNome").value.toLowerCase();
 
-        const filtrados = chamados.filter(c => {
-          if (filtroStatus !== "Todos" && c.status !== filtroStatus) return false;
-          if (filtroPlataforma !== "Todas" && c.plataforma !== filtroPlataforma) return false;
-          if (buscaNome && !c.nome.toLowerCase().includes(buscaNome)) return false;
-          return true;
+          const filtrados = chamados.filter(c => {
+            if (filtroStatus !== "Todos" && c.status !== filtroStatus) return false;
+            if (filtroPlataforma !== "Todas" && c.plataforma !== filtroPlataforma) return false;
+            if (buscaNome && !c.nome.toLowerCase().includes(buscaNome)) return false;
+            return true;
+          });
+
+          const ws_data = [["Nome", "Cargo", "Plataforma", "Motivo", "Observações", "Data", "Hora", "Status"],
+            ...filtrados.map(c => [c.nome, c.cargo, c.plataforma, c.motivo, c.obs, c.data, c.hora, c.status])];
+
+          const wb = XLSX.utils.book_new();
+          const ws = XLSX.utils.aoa_to_sheet(ws_data);
+          XLSX.utils.book_append_sheet(wb, ws, "Chamados");
+          XLSX.writeFile(wb, "diario_de_bordo.xlsx");
         });
+    }
 
-        const ws_data = [
-          ["Nome", "Cargo", "Plataforma", "Motivo", "Observações", "Data", "Hora", "Status"],
-          ...filtrados.map(c => [c.nome, c.cargo, c.plataforma, c.motivo, c.obs, c.data, c.hora, c.status])
-        ];
-
-        const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.aoa_to_sheet(ws_data);
-        XLSX.utils.book_append_sheet(wb, ws, "Chamados");
-        XLSX.writeFile(wb, "diario_de_bordo.xlsx");
-      });
-  }
-
-  toggleView('formView');
-</script>
+    toggleView('formView');
+  </script>
+</body>
+</html>
