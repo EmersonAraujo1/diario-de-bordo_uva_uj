@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <title>Diário de Bordo - Corporativo</title>
@@ -7,52 +7,161 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* ... [ESTILOS CSS - já otimizados na versão anterior, mantidos no seu código] ... */
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem;
+      background-color: #002B5B;
+      color: white;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      background-color: #f1f1f1;
+      padding: 0.75rem;
+    }
+
+    nav button {
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 5px;
+    }
+
+    nav button:hover {
+      background-color: #0056b3;
+    }
+
+    #formView, #adminView, #senhaAdmin {
+      display: none;
+      flex-direction: column;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      padding: 0.6rem 1rem;
+      background-color: #28a745;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    #notificacao {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: green;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 0.6rem;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    tr.pendente {
+      background-color: #fff3cd;
+    }
+
+    tr.tratativa {
+      background-color: #cce5ff;
+    }
+
+    tr.resolvido {
+      background-color: #d4edda;
+    }
+
+    .btn-table {
+      background-color: #6c757d;
+      padding: 0.3rem 0.6rem;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .btn-table:hover {
+      background-color: #5a6268;
+    }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo uva">Universidade Veiga de Almeida</div>
-    <div class="logo unijorge">Unijorge</div>
+    <div>Universidade Veiga de Almeida</div>
+    <div>Unijorge</div>
   </header>
 
   <nav>
     <button onclick="toggleView('formView')">📋 Diário de Bordo</button>
-    <button onclick="mostrarCampoSenha()">🔒 Admin</button>
+    <button onclick="toggleView('senhaAdmin')">🔒 Admin</button>
   </nav>
 
-  <!-- Formulário -->
+  <!-- FORMULÁRIO -->
   <div id="formView">
     <h2>Registro - Diário de Bordo</h2>
     <label for="nome">Nome:</label>
-    <input type="text" id="nome" autocomplete="off">
+    <input type="text" id="nome" required>
 
     <label for="cargo">Cargo:</label>
     <select id="cargo">
-      <option>Consultor</option>
-      <option>Assistente</option>
-      <option>Analista</option>
-      <option>Coordenador</option>
-      <option>Gerência</option>
+      <option>Consultor</option><option>Assistente</option><option>Analista</option><option>Coordenador</option><option>Gerência</option>
     </select>
 
     <label for="plataforma">Plataforma:</label>
     <select id="plataforma">
-      <option>Botmaker</option>
-      <option>Olos</option>
-      <option>Eaglle</option>
-      <option>Lyceum</option>
-      <option>Internet</option>
+      <option>Botmaker</option><option>Olos</option><option>Eaglle</option><option>Lyceum</option><option>Internet</option>
     </select>
 
     <label for="motivo">Motivo do chamado:</label>
     <select id="motivo">
-      <option>Queda</option>
-      <option>Instabilidade</option>
-      <option>Não consigo acessar</option>
-      <option>Sem internet</option>
-      <option>Não consigo conectar</option>
-      <option>Outro</option>
+      <option>Queda</option><option>Instabilidade</option><option>Não consigo acessar</option><option>Sem internet</option><option>Não consigo conectar</option><option>Outro</option>
     </select>
 
     <label for="obs">Observações:</label>
@@ -62,58 +171,46 @@
     <div id="notificacao"></div>
   </div>
 
-  <!-- Senha Admin -->
+  <!-- SENHA ADMIN -->
   <div id="senhaAdmin">
     <h2>🔐 Acesso Restrito</h2>
-    <label for="senha">Digite a senha de administrador:</label>
-    <input type="password" id="senha" placeholder="Senha" autocomplete="off">
+    <label for="senha">Senha de administrador:</label>
+    <input type="password" id="senha" placeholder="Senha">
     <button onclick="validarSenha()">Entrar</button>
   </div>
 
-  <!-- Painel Administrativo -->
+  <!-- PAINEL ADMIN -->
   <div id="adminView">
     <h2>📊 Painel Administrativo</h2>
-    <div>
-      <label for="filtroStatus">Filtrar por status:</label>
-      <select id="filtroStatus" onchange="filtrarChamados()">
-        <option value="Todos">Todos</option>
-        <option value="Pendente">Pendente</option>
-        <option value="Em tratativa">Em tratativa</option>
-        <option value="Resolvido">Resolvido</option>
-      </select>
-
-      <label for="filtroPlataforma">Plataforma:</label>
-      <select id="filtroPlataforma" onchange="filtrarChamados()">
-        <option value="Todas">Todas</option>
-        <option>Botmaker</option>
-        <option>Olos</option>
-        <option>Eaglle</option>
-        <option>Lyceum</option>
-        <option>Internet</option>
-      </select>
-
-      <label for="buscaNome">Buscar por nome:</label>
-      <input type="text" id="buscaNome" oninput="filtrarChamados()" placeholder="Digite um nome">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+      <div style="flex: 1;">
+        <label>Status:</label>
+        <select id="filtroStatus" onchange="filtrarChamados()">
+          <option value="Todos">Todos</option><option>Pendente</option><option>Em tratativa</option><option>Resolvido</option>
+        </select>
+      </div>
+      <div style="flex: 1;">
+        <label>Plataforma:</label>
+        <select id="filtroPlataforma" onchange="filtrarChamados()">
+          <option value="Todas">Todas</option><option>Botmaker</option><option>Olos</option><option>Eaglle</option><option>Lyceum</option><option>Internet</option>
+        </select>
+      </div>
+      <div style="flex: 2;">
+        <label>Buscar por nome:</label>
+        <input type="text" id="buscaNome" oninput="filtrarChamados()" placeholder="Digite um nome">
+      </div>
     </div>
 
     <table id="tabelaChamados">
       <thead>
         <tr>
-          <th>Nome</th>
-          <th>Cargo</th>
-          <th>Plataforma</th>
-          <th>Motivo</th>
-          <th>Obs</th>
-          <th>Data</th>
-          <th>Hora</th>
-          <th>Status</th>
-          <th>Ações</th>
+          <th>Nome</th><th>Cargo</th><th>Plataforma</th><th>Motivo</th><th>Obs</th><th>Data</th><th>Hora</th><th>Status</th><th>Ações</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
 
-    <button onclick="exportarExcel()">📄 Exportar para Excel</button>
+    <button onclick="exportarExcel()">📄 Exportar Excel</button>
   </div>
 
   <script>
@@ -121,40 +218,33 @@
     const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyaUlvGoiPbYjrfoPHarYnEV4fcx2gzeE-v3cbESxowFXo1V93gBBnp_RUr_Y7M8Zqg/exec";
     let chamados = [];
 
-    function toggleView(viewId) {
-      document.getElementById('formView').style.display = 'none';
-      document.getElementById('adminView').style.display = 'none';
-      document.getElementById('senhaAdmin').style.display = 'none';
-      document.getElementById(viewId).style.display = 'flex';
-    }
+    const toggleView = (viewId) => {
+      ['formView', 'adminView', 'senhaAdmin'].forEach(id =>
+        document.getElementById(id).style.display = (id === viewId ? 'flex' : 'none')
+      );
+      if (viewId === 'adminView') buscarChamados();
+    };
 
-    function mostrarCampoSenha() {
-      toggleView('senhaAdmin');
-    }
-
-    function validarSenha() {
+    const validarSenha = () => {
       const senha = document.getElementById("senha").value;
-      if (senha === senhaCorreta) {
-        toggleView('adminView');
-        buscarChamados();
-      } else {
-        alert("Senha incorreta.");
-      }
-    }
+      senha === senhaCorreta ? toggleView('adminView') : alert("Senha incorreta.");
+    };
 
-    async function enviarFormulario() {
+    const enviarFormulario = async () => {
       const nome = document.getElementById("nome").value.trim();
-      const cargo = document.getElementById("cargo").value;
-      const plataforma = document.getElementById("plataforma").value;
-      const motivo = document.getElementById("motivo").value;
-      const obs = document.getElementById("obs").value.trim();
-      if (!nome) return alert("Por favor, preencha o nome.");
+      if (!nome) return alert("Preencha o nome.");
 
-      const dataAtual = new Date();
-      const data = dataAtual.toLocaleDateString('pt-BR');
-      const hora = dataAtual.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-      const id = Date.now() + "-" + Math.floor(Math.random() * 1000);
-      const registro = { id, nome, cargo, plataforma, motivo, obs, data, hora, status: "Pendente" };
+      const registro = {
+        id: Date.now() + "-" + Math.floor(Math.random() * 1000),
+        nome,
+        cargo: document.getElementById("cargo").value,
+        plataforma: document.getElementById("plataforma").value,
+        motivo: document.getElementById("motivo").value,
+        obs: document.getElementById("obs").value.trim(),
+        data: new Date().toLocaleDateString('pt-BR'),
+        hora: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+        status: "Pendente"
+      };
 
       try {
         const res = await fetch(GOOGLE_SHEET_WEBAPP_URL, {
@@ -163,15 +253,16 @@
           headers: { "Content-Type": "application/json" }
         });
         if (!res.ok) throw new Error("Erro ao enviar os dados.");
-        document.querySelectorAll('#formView input[type=text], #formView textarea').forEach(el => el.value = '');
-        document.getElementById("notificacao").textContent = "✅ Chamado registrado com sucesso!";
-        setTimeout(() => document.getElementById("notificacao").textContent = "", 4000);
-      } catch (err) {
-        alert(err.message);
-      }
-    }
 
-    async function buscarChamados() {
+        document.querySelectorAll('#formView input, #formView textarea').forEach(el => el.value = '');
+        document.getElementById("notificacao").textContent = "✅ Chamado registrado!";
+        setTimeout(() => document.getElementById("notificacao").textContent = "", 3000);
+      } catch (err) {
+        alert("Erro: " + err.message);
+      }
+    };
+
+    const buscarChamados = async () => {
       try {
         const res = await fetch(GOOGLE_SHEET_WEBAPP_URL);
         chamados = await res.json();
@@ -179,9 +270,9 @@
       } catch {
         alert("Erro ao buscar chamados.");
       }
-    }
+    };
 
-    function filtrarChamados() {
+    const filtrarChamados = () => {
       const status = document.getElementById("filtroStatus").value;
       const plataforma = document.getElementById("filtroPlataforma").value;
       const nome = document.getElementById("buscaNome").value.toLowerCase();
@@ -192,75 +283,58 @@
         c.nome.toLowerCase().includes(nome)
       );
       montarTabela(filtrados);
-    }
+    };
 
-    function montarTabela(lista) {
+    const montarTabela = (lista) => {
       const tbody = document.querySelector("#tabelaChamados tbody");
-      tbody.innerHTML = "";
-      if (!lista.length) return tbody.innerHTML = `<tr><td colspan="9" style="text-align:center">Nenhum chamado encontrado.</td></tr>`;
-      lista.forEach(c => {
-        const tr = document.createElement("tr");
-        tr.className = c.status === "Pendente" ? "pendente" : c.status === "Em tratativa" ? "tratativa" : "resolvido";
-        tr.innerHTML = `
-          <td>${c.nome}</td>
-          <td>${c.cargo}</td>
-          <td>${c.plataforma}</td>
-          <td>${c.motivo}</td>
-          <td>${c.obs}</td>
-          <td>${c.data}</td>
-          <td>${c.hora}</td>
-          <td>
-            <select onchange="alterarStatus('${c.id}', this.value)">
-              <option ${c.status === "Pendente" ? "selected" : ""}>Pendente</option>
-              <option ${c.status === "Em tratativa" ? "selected" : ""}>Em tratativa</option>
-              <option ${c.status === "Resolvido" ? "selected" : ""}>Resolvido</option>
-            </select>
-          </td>
-          <td><button class="btn-table" onclick="copiarProtocolo('${c.id}')">Copiar Protocolo</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
+      tbody.innerHTML = lista.length
+        ? lista.map(c => `
+          <tr class="${c.status.toLowerCase().replace(" ", "")}">
+            <td>${c.nome}</td><td>${c.cargo}</td><td>${c.plataforma}</td><td>${c.motivo}</td><td>${c.obs}</td>
+            <td>${c.data}</td><td>${c.hora}</td>
+            <td>
+              <select onchange="alterarStatus('${c.id}', this.value)">
+                <option ${c.status === "Pendente" ? "selected" : ""}>Pendente</option>
+                <option ${c.status === "Em tratativa" ? "selected" : ""}>Em tratativa</option>
+                <option ${c.status === "Resolvido" ? "selected" : ""}>Resolvido</option>
+              </select>
+            </td>
+            <td><button class="btn-table" onclick="copiarProtocolo('${c.id}')">Copiar</button></td>
+          </tr>`).join('')
+        : `<tr><td colspan="9" style="text-align:center;">Nenhum chamado encontrado.</td></tr>`;
+    };
 
-    async function alterarStatus(id, status) {
+    const alterarStatus = async (id, status) => {
       try {
-        const res = await fetch(GOOGLE_SHEET_WEBAPP_URL, {
+        await fetch(GOOGLE_SHEET_WEBAPP_URL, {
           method: "POST",
           body: JSON.stringify({ id, status }),
           headers: { "Content-Type": "application/json" }
         });
-        if (!res.ok) throw new Error();
         const chamado = chamados.find(c => c.id === id);
         if (chamado) chamado.status = status;
         filtrarChamados();
       } catch {
         alert("Erro ao atualizar status.");
       }
-    }
+    };
 
-    function copiarProtocolo(id) {
+    const copiarProtocolo = (id) => {
       navigator.clipboard.writeText(id)
         .then(() => alert("Protocolo copiado: " + id))
         .catch(() => alert("Erro ao copiar protocolo."));
-    }
+    };
 
-    function exportarExcel() {
+    const exportarExcel = () => {
       const dados = chamados.map(c => ({
-        Protocolo: c.id,
-        Nome: c.nome,
-        Cargo: c.cargo,
-        Plataforma: c.plataforma,
-        Motivo: c.motivo,
-        Observações: c.obs,
-        Data: c.data,
-        Hora: c.hora,
-        Status: c.status
+        Protocolo: c.id, Nome: c.nome, Cargo: c.cargo, Plataforma: c.plataforma,
+        Motivo: c.motivo, Observações: c.obs, Data: c.data, Hora: c.hora, Status: c.status
       }));
       const ws = XLSX.utils.json_to_sheet(dados);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Chamados");
       XLSX.writeFile(wb, "DiarioDeBordo.xlsx");
-    }
+    };
 
     window.onload = () => toggleView('formView');
   </script>
