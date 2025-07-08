@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Diário de Bordo - Corporativo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
@@ -13,17 +13,20 @@
       margin: 0;
       padding: 0;
       background-color: #f9f9f9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-
     header {
       display: flex;
       justify-content: space-between;
-      padding: 1rem;
+      align-items: center;
+      padding: 1rem 2rem;
       background-color: #002B5B;
       color: white;
       font-weight: 600;
+      font-size: 1.2rem;
     }
-
     nav {
       display: flex;
       justify-content: center;
@@ -31,136 +34,147 @@
       background-color: #f1f1f1;
       padding: 0.75rem;
     }
-
     nav button {
-      padding: 0.5rem 1rem;
-      font-weight: bold;
+      padding: 0.5rem 1.2rem;
+      font-weight: 600;
       cursor: pointer;
       border: none;
       background-color: #007BFF;
       color: white;
       border-radius: 5px;
+      transition: background-color 0.3s ease;
     }
-
     nav button:hover {
       background-color: #0056b3;
     }
-
     #formView, #adminView, #senhaAdmin {
       display: none;
       flex-direction: column;
-      max-width: 800px;
+      max-width: 900px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0,0,0,0.12);
     }
-
     label {
       margin-top: 1rem;
       font-weight: 600;
+      display: block;
     }
-
     input, select, textarea {
       width: 100%;
       padding: 0.6rem;
       margin-top: 0.4rem;
       border: 1px solid #ccc;
       border-radius: 5px;
-      box-sizing: border-box;
+      font-size: 1rem;
+      font-family: inherit;
+      resize: vertical;
     }
-
-    button {
-      margin-top: 1.5rem;
-      padding: 0.6rem 1rem;
+    textarea {
+      min-height: 70px;
+    }
+    button.submit-btn {
+      margin-top: 1.8rem;
+      padding: 0.7rem 1.3rem;
       background-color: #28a745;
       color: white;
-      font-weight: bold;
+      font-weight: 700;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
+      font-size: 1.1rem;
       transition: background-color 0.3s ease;
+      align-self: flex-start;
     }
-
-    button:hover {
+    button.submit-btn:hover {
       background-color: #218838;
     }
-
     #notificacao {
       margin-top: 1rem;
-      font-weight: bold;
+      font-weight: 700;
       color: green;
-      min-height: 1.5em;
+      min-height: 24px;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
+      font-size: 0.95rem;
     }
-
     th, td {
-      padding: 0.6rem;
+      padding: 0.6rem 0.8rem;
       text-align: left;
       border-bottom: 1px solid #ddd;
-      word-break: break-word;
+      vertical-align: middle;
     }
-
     th {
       background-color: #f0f0f0;
     }
-
     tr.pendente {
       background-color: #fff3cd;
     }
-
-    tr.tratativa {
+    tr.emtratativa {
       background-color: #cce5ff;
     }
-
     tr.resolvido {
       background-color: #d4edda;
     }
-
     .btn-table {
       background-color: #6c757d;
-      padding: 0.3rem 0.6rem;
+      padding: 0.3rem 0.7rem;
       border: none;
       border-radius: 5px;
       color: white;
       cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
     }
-
     .btn-table:hover {
       background-color: #5a6268;
     }
-
     .charts {
       display: flex;
       gap: 2rem;
       flex-wrap: wrap;
       margin-bottom: 2rem;
     }
-
     .chart-container {
-      flex: 1;
-      min-width: 300px;
+      flex: 1 1 320px;
+      min-width: 320px;
+      background: #fafafa;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
     }
-
-    /* Flex container for filters */
-    #adminView > div.filters {
+    .filters {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       margin-bottom: 1rem;
     }
-
-    #adminView > div.filters > div {
-      flex: 1 1 150px;
-      min-width: 150px;
+    .filters > div {
+      flex: 1 1 200px;
+      min-width: 180px;
+      display: flex;
+      flex-direction: column;
     }
-
+    #buscaNome {
+      padding: 0.6rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+    }
+    button.export-btn {
+      margin-top: 1rem;
+      background-color: #007bff;
+      font-weight: 600;
+    }
+    button.export-btn:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
@@ -175,10 +189,11 @@
   </nav>
 
   <!-- FORMULÁRIO -->
-  <div id="formView" style="display:flex; flex-direction: column;">
+  <section id="formView">
     <h2>Registro - Diário de Bordo</h2>
+
     <label for="nome">Nome:</label>
-    <input type="text" id="nome" required />
+    <input type="text" id="nome" placeholder="Digite seu nome" required />
 
     <label for="cargo">Cargo:</label>
     <select id="cargo">
@@ -209,22 +224,22 @@
     </select>
 
     <label for="obs">Observações:</label>
-    <textarea id="obs" rows="3"></textarea>
+    <textarea id="obs" rows="3" placeholder="Detalhe aqui, se necessário..."></textarea>
 
-    <button onclick="enviarFormulario()">🚀 Enviar</button>
+    <button class="submit-btn" onclick="enviarFormulario()">🚀 Enviar</button>
     <div id="notificacao"></div>
-  </div>
+  </section>
 
   <!-- SENHA ADMIN -->
-  <div id="senhaAdmin" style="display:none; flex-direction: column;">
+  <section id="senhaAdmin">
     <h2>🔐 Acesso Restrito</h2>
     <label for="senha">Senha de administrador:</label>
-    <input type="password" id="senha" placeholder="Senha" />
-    <button onclick="validarSenha()">Entrar</button>
-  </div>
+    <input type="password" id="senha" placeholder="Digite a senha" />
+    <button class="submit-btn" onclick="validarSenha()">Entrar</button>
+  </section>
 
   <!-- PAINEL ADMIN -->
-  <div id="adminView" style="display:none; flex-direction: column;">
+  <section id="adminView">
     <h2>📊 Painel Administrativo</h2>
 
     <div class="charts">
@@ -238,16 +253,16 @@
 
     <div class="filters">
       <div>
-        <label for="filtroStatus">Status:</label>
+        <label>Status:</label>
         <select id="filtroStatus" onchange="filtrarChamados()">
           <option value="Todos">Todos</option>
-          <option>Pendente</option>
-          <option>Em tratativa</option>
-          <option>Resolvido</option>
+          <option value="Pendente">Pendente</option>
+          <option value="Em tratativa">Em tratativa</option>
+          <option value="Resolvido">Resolvido</option>
         </select>
       </div>
       <div>
-        <label for="filtroPlataforma">Plataforma:</label>
+        <label>Plataforma:</label>
         <select id="filtroPlataforma" onchange="filtrarChamados()">
           <option value="Todas">Todas</option>
           <option>Botmaker</option>
@@ -257,8 +272,8 @@
           <option>Internet</option>
         </select>
       </div>
-      <div style="flex: 2 1 300px;">
-        <label for="buscaNome">Buscar por nome:</label>
+      <div style="flex: 2;">
+        <label>Buscar por nome:</label>
         <input type="text" id="buscaNome" oninput="filtrarChamados()" placeholder="Digite um nome" />
       </div>
     </div>
@@ -270,7 +285,7 @@
           <th>Cargo</th>
           <th>Plataforma</th>
           <th>Motivo</th>
-          <th>Obs</th>
+          <th>Observações</th>
           <th>Data</th>
           <th>Hora</th>
           <th>Status</th>
@@ -280,36 +295,57 @@
       <tbody></tbody>
     </table>
 
-    <button onclick="exportarExcel()">📄 Exportar Excel</button>
-  </div>
+    <button class="submit-btn export-btn" onclick="exportarExcel()">📄 Exportar Excel</button>
+  </section>
 
   <script>
-    const senhaCorreta = "admin123";
-    const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyaUlvGoiPbYjrfoPHarYnEV4fcx2gzeE-v3cbESxowFXo1V93gBBnp_RUr_Y7M8Zqg/exec";
+    // CONFIGURE AQUI A URL DO SEU WEBAPP DO GOOGLE APPS SCRIPT
+    const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxKETiqYQktn23pDpcnDZq_qwULNLwTe5Jpr4s947l9XAIyoCYt1eRfLlhhlG3ILSa6/exec";
+
+    const senhaCorreta = "admin123"; // Mude para a senha que desejar
     let chamados = [];
+    let chartStatusInstance = null;
+    let chartPlataformaInstance = null;
 
-    const toggleView = (viewId) => {
-      ['formView', 'adminView', 'senhaAdmin'].forEach(id =>
-        document.getElementById(id).style.display = (id === viewId ? 'flex' : 'none')
-      );
-      if (viewId === 'adminView') buscarChamados();
-    };
+    function toggleView(viewId) {
+      ['formView', 'adminView', 'senhaAdmin'].forEach(id => {
+        document.getElementById(id).style.display = id === viewId ? 'flex' : 'none';
+      });
+      if (viewId === 'adminView') {
+        buscarChamados();
+      }
+      clearNotificacao();
+    }
 
-    const validarSenha = () => {
-      const senha = document.getElementById("senha").value;
-      senha === senhaCorreta ? toggleView('adminView') : alert("Senha incorreta.");
-    };
+    function validarSenha() {
+      const senhaInput = document.getElementById('senha').value;
+      if (senhaInput === senhaCorreta) {
+        toggleView('adminView');
+        document.getElementById('senha').value = '';
+      } else {
+        alert('Senha incorreta.');
+      }
+    }
 
-    const enviarFormulario = async () => {
-      const nome = document.getElementById("nome").value.trim();
-      if (!nome) return alert("Preencha o nome.");
+    function clearNotificacao() {
+      document.getElementById('notificacao').textContent = '';
+    }
+
+    async function enviarFormulario() {
+      clearNotificacao();
+
+      const nome = document.getElementById('nome').value.trim();
+      if (!nome) {
+        alert('Por favor, preencha o nome.');
+        return;
+      }
 
       const registro = {
         nome,
-        cargo: document.getElementById("cargo").value,
-        plataforma: document.getElementById("plataforma").value,
-        motivo: document.getElementById("motivo").value,
-        obs: document.getElementById("obs").value.trim(),
+        cargo: document.getElementById('cargo').value,
+        plataforma: document.getElementById('plataforma').value,
+        motivo: document.getElementById('motivo').value,
+        obs: document.getElementById('obs').value.trim(),
         data: new Date().toLocaleDateString('pt-BR'),
         hora: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
         status: "Pendente"
@@ -321,91 +357,117 @@
           body: JSON.stringify(registro),
           headers: { "Content-Type": "application/json" }
         });
-        const json = await res.json();
-        if (!res.ok || json.error) throw new Error(json.error || "Erro ao enviar os dados.");
+        if (!res.ok) throw new Error("Erro ao enviar os dados.");
 
-        // O backend retorna o id criado
-        registro.id = json.id;
+        // Reset form
+        document.getElementById('nome').value = '';
+        document.getElementById('cargo').selectedIndex = 0;
+        document.getElementById('plataforma').selectedIndex = 0;
+        document.getElementById('motivo').selectedIndex = 0;
+        document.getElementById('obs').value = '';
 
-        chamados.push(registro);
-
-        document.querySelectorAll('#formView input, #formView textarea').forEach(el => el.value = '');
-        document.getElementById("notificacao").textContent = "✅ Chamado registrado!";
-        setTimeout(() => document.getElementById("notificacao").textContent = "", 3000);
-      } catch (err) {
-        alert("Erro: " + err.message);
+        document.getElementById('notificacao').textContent = '✅ Chamado registrado!';
+        setTimeout(clearNotificacao, 4000);
+      } catch (error) {
+        alert('Erro: ' + error.message);
       }
-    };
+    }
 
-    const buscarChamados = async () => {
+    async function buscarChamados() {
       try {
         const res = await fetch(GOOGLE_SHEET_WEBAPP_URL);
+        if (!res.ok) throw new Error("Erro ao buscar chamados.");
         chamados = await res.json();
         filtrarChamados();
         renderizarGraficos();
-      } catch {
-        alert("Erro ao buscar chamados.");
+      } catch (error) {
+        alert('Erro: ' + error.message);
       }
-    };
+    }
 
-    const filtrarChamados = () => {
-      const status = document.getElementById("filtroStatus").value;
-      const plataforma = document.getElementById("filtroPlataforma").value;
-      const nome = document.getElementById("buscaNome").value.toLowerCase();
+    function filtrarChamados() {
+      const statusFilter = document.getElementById('filtroStatus').value;
+      const plataformaFilter = document.getElementById('filtroPlataforma').value;
+      const nomeBusca = document.getElementById('buscaNome').value.toLowerCase();
 
-      const filtrados = chamados.filter(c =>
-        (status === "Todos" || c.status === status) &&
-        (plataforma === "Todas" || c.plataforma === plataforma) &&
-        c.nome.toLowerCase().includes(nome)
-      );
+      const filtrados = chamados.filter(c => {
+        const statusOk = statusFilter === "Todos" || c.status === statusFilter;
+        const plataformaOk = plataformaFilter === "Todas" || c.plataforma === plataformaFilter;
+        const nomeOk = c.nome.toLowerCase().includes(nomeBusca);
+        return statusOk && plataformaOk && nomeOk;
+      });
+
       montarTabela(filtrados);
-    };
+    }
 
-    const montarTabela = (lista) => {
-      const tbody = document.querySelector("#tabelaChamados tbody");
-      tbody.innerHTML = lista.length
-        ? lista.map(c => `
-          <tr class="${c.status.toLowerCase().replace(" ", "")}">
-            <td>${c.nome}</td><td>${c.cargo}</td><td>${c.plataforma}</td><td>${c.motivo}</td><td>${c.obs}</td>
-            <td>${c.data}</td><td>${c.hora}</td>
-            <td>
-              <select onchange="alterarStatus('${c.id}', this.value)">
-                <option ${c.status === "Pendente" ? "selected" : ""}>Pendente</option>
-                <option ${c.status === "Em tratativa" ? "selected" : ""}>Em tratativa</option>
-                <option ${c.status === "Resolvido" ? "selected" : ""}>Resolvido</option>
-              </select>
-            </td>
-            <td><button class="btn-table" onclick="copiarProtocolo('${c.id}')">Copiar</button></td>
-          </tr>`).join('')
-        : `<tr><td colspan="9" style="text-align:center;">Nenhum chamado encontrado.</td></tr>`;
-    };
+    function montarTabela(lista) {
+      const tbody = document.querySelector('#tabelaChamados tbody');
+      tbody.innerHTML = '';
 
-    const alterarStatus = async (id, status) => {
+      if (!lista.length) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;">Nenhum chamado encontrado.</td></tr>`;
+        return;
+      }
+
+      lista.forEach(c => {
+        const tr = document.createElement('tr');
+        // Classe para cor do status
+        let statusClass = c.status.toLowerCase().replace(/\s/g, '');
+        tr.classList.add(statusClass);
+
+        tr.innerHTML = `
+          <td>${c.nome}</td>
+          <td>${c.cargo}</td>
+          <td>${c.plataforma}</td>
+          <td>${c.motivo}</td>
+          <td>${c.obs}</td>
+          <td>${c.data}</td>
+          <td>${c.hora}</td>
+          <td>
+            <select onchange="alterarStatus('${c.id}', this.value)">
+              <option ${c.status === "Pendente" ? "selected" : ""}>Pendente</option>
+              <option ${c.status === "Em tratativa" ? "selected" : ""}>Em tratativa</option>
+              <option ${c.status === "Resolvido" ? "selected" : ""}>Resolvido</option>
+            </select>
+          </td>
+          <td>
+            <button class="btn-table" onclick="copiarProtocolo('${c.id}')">Copiar</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function alterarStatus(id, novoStatus) {
       try {
         const res = await fetch(GOOGLE_SHEET_WEBAPP_URL, {
           method: "POST",
-          body: JSON.stringify({ id, status }),
+          body: JSON.stringify({ id, status: novoStatus }),
           headers: { "Content-Type": "application/json" }
         });
-        const json = await res.json();
-        if (!res.ok || json.error) throw new Error(json.error || "Erro ao atualizar status.");
+        if (!res.ok) throw new Error("Erro ao atualizar status.");
 
+        // Atualiza local
         const chamado = chamados.find(c => c.id === id);
-        if (chamado) chamado.status = status;
+        if (chamado) chamado.status = novoStatus;
         filtrarChamados();
         renderizarGraficos();
       } catch {
         alert("Erro ao atualizar status.");
       }
-    };
+    }
 
-    const copiarProtocolo = (id) => {
+    function copiarProtocolo(id) {
       navigator.clipboard.writeText(id)
         .then(() => alert("Protocolo copiado: " + id))
         .catch(() => alert("Erro ao copiar protocolo."));
-    };
+    }
 
-    const exportarExcel = () => {
+    function exportarExcel() {
+      if (!chamados.length) {
+        alert("Nenhum dado para exportar.");
+        return;
+      }
       const dados = chamados.map(c => ({
         Protocolo: c.id,
         Nome: c.nome,
@@ -421,12 +483,9 @@
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Chamados");
       XLSX.writeFile(wb, "DiarioDeBordo.xlsx");
-    };
+    }
 
-    let chartStatusInstance = null;
-    let chartPlataformaInstance = null;
-
-    const renderizarGraficos = () => {
+    function renderizarGraficos() {
       const statusContagem = {};
       const plataformaContagem = {};
 
@@ -435,58 +494,62 @@
         plataformaContagem[c.plataforma] = (plataformaContagem[c.plataforma] || 0) + 1;
       });
 
-      // Destroy old charts if exist
-      if (chartStatusInstance) chartStatusInstance.destroy();
-      if (chartPlataformaInstance) chartPlataformaInstance.destroy();
+      // Limpa gráficos anteriores
+      if (chartStatusInstance) {
+        chartStatusInstance.destroy();
+      }
+      if (chartPlataformaInstance) {
+        chartPlataformaInstance.destroy();
+      }
 
+      // Doughnut Status
       const ctxStatus = document.getElementById('chartStatus').getContext('2d');
       chartStatusInstance = new Chart(ctxStatus, {
         type: 'doughnut',
         data: {
           labels: Object.keys(statusContagem),
           datasets: [{
-            label: 'Status',
             data: Object.values(statusContagem),
-            backgroundColor: ['#ffc107', '#17a2b8', '#28a745'],
+            backgroundColor: ['#ffc107', '#17a2b8', '#28a745']
           }]
         },
         options: {
-          responsive: true,
           plugins: {
-            legend: { position: 'bottom' },
-            title: { display: true, text: 'Distribuição por Status' }
+            legend: {
+              position: 'bottom'
+            }
           }
         }
       });
 
-      const ctxPlataforma = document.getElementById('chartPlataforma').getContext('2d');
-      chartPlataformaInstance = new Chart(ctxPlataforma, {
+      // Bar Plataforma
+      const ctxPlat = document.getElementById('chartPlataforma').getContext('2d');
+      chartPlataformaInstance = new Chart(ctxPlat, {
         type: 'bar',
         data: {
           labels: Object.keys(plataformaContagem),
           datasets: [{
-            label: 'Plataforma',
+            label: 'Quantidade',
             data: Object.values(plataformaContagem),
-            backgroundColor: '#007bff',
+            backgroundColor: '#007bff'
           }]
         },
         options: {
-          responsive: true,
-          plugins: {
-            legend: { display: false },
-            title: { display: true, text: 'Distribuição por Plataforma' }
-          },
           scales: {
-            y: { beginAtZero: true, precision: 0 }
+            y: {
+              beginAtZero: true,
+              precision: 0
+            }
+          },
+          plugins: {
+            legend: { display: false }
           }
         }
       });
-    };
+    }
 
-    window.onload = () => {
-      toggleView('formView');
-    };
+    // Inicializa com a view do formulário
+    toggleView('formView');
   </script>
 </body>
 </html>
-   
