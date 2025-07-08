@@ -22,6 +22,8 @@
       align-items: center;
       user-select: none;
     }
+
+    /* Cabeçalho */
     header {
       width: 100%;
       max-width: 900px;
@@ -37,6 +39,7 @@
     header .logo {
       font-family: 'Inter', sans-serif;
     }
+
     nav {
       margin-bottom: 25px;
       width: 100%;
@@ -46,63 +49,78 @@
       gap: 18px;
       z-index: 10;
       position: relative;
-      flex-wrap: wrap;
     }
     nav button {
       background-color: #4a5a70;
       border: none;
-      border-radius: 6px;
-      padding: 12px 30px;
+      border-radius: 8px;
+      padding: 14px 32px;
       color: white;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      font-size: 1rem;
-      transition: background-color 0.25s ease;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
       user-select: none;
-      box-shadow: 0 3px 6px rgba(74,90,112,0.3);
-      min-width: 150px;
-      flex: 1 1 auto;
+      box-shadow: 0 6px 16px rgba(74,90,112,0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      filter: drop-shadow(0 0 0 transparent);
     }
     nav button:hover {
       background-color: #1f3a5f;
-      box-shadow: 0 4px 8px rgba(31,58,95,0.5);
+      box-shadow: 0 10px 30px rgba(31,58,95,0.7);
+      transform: translateY(-3px);
+      filter: drop-shadow(0 4px 4px rgba(31,58,95,0.4));
     }
+    nav button:active {
+      transform: translateY(1px);
+      box-shadow: none;
+      filter: drop-shadow(0 0 0 transparent);
+    }
+
+    /* Contêineres */
     #formView, #adminView, #senhaAdmin {
-      background-color: #fff;
-      border-radius: 10px;
-      padding: 30px 35px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 32px 40px;
       max-width: 900px;
       width: 100%;
-      box-shadow: 0 8px 20px rgba(31,58,95,0.1);
+      box-shadow: 0 12px 32px rgba(31,58,95,0.15);
       color: #1f3a5f;
       display: none;
       flex-direction: column;
       position: relative;
       user-select: text;
     }
+
     h2 {
       color: #1f3a5f;
-      margin-bottom: 25px;
+      margin-bottom: 28px;
       font-weight: 700;
       font-size: 2rem;
       text-align: center;
       letter-spacing: 1.2px;
+      user-select: none;
     }
+
     label {
       font-weight: 600;
-      margin-top: 18px;
+      margin-top: 20px;
       display: block;
       color: #4a5a70;
       font-size: 1rem;
+      user-select: none;
     }
+
     input[type=text],
     input[type=password],
     select,
     textarea {
       width: 100%;
-      padding: 12px 15px;
-      margin-top: 6px;
-      border-radius: 6px;
+      padding: 14px 18px;
+      margin-top: 8px;
+      border-radius: 8px;
       border: 1.8px solid #d1d9e6;
       font-size: 1rem;
       background-color: #fefefe;
@@ -110,7 +128,8 @@
       font-family: 'Inter', sans-serif;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
       resize: vertical;
-      box-shadow: inset 0 0 6px rgba(31,58,95,0.1);
+      box-shadow: inset 0 0 8px rgba(31,58,95,0.1);
+      user-select: text;
     }
     input[type=text]:focus,
     input[type=password]:focus,
@@ -118,66 +137,77 @@
     textarea:focus {
       outline: none;
       border-color: #1f3a5f;
-      box-shadow: 0 0 10px rgba(31,58,95,0.3);
-      background-color: #fff;
+      box-shadow: 0 0 14px rgba(31,58,95,0.4);
+      background-color: #ffffff;
       color: #1f3a5f;
     }
+
+    /* Botões */
     button {
       background-color: #4a5a70;
       border: none;
-      border-radius: 8px;
-      padding: 14px 30px;
-      margin-top: 30px;
+      border-radius: 10px;
+      padding: 16px 36px;
+      margin-top: 36px;
       color: white;
       font-weight: 700;
       cursor: pointer;
-      font-size: 1.1rem;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+      font-size: 1.2rem;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
       user-select: none;
-      box-shadow: 0 4px 10px rgba(74,90,112,0.3);
-      min-width: 150px;
+      box-shadow: 0 8px 24px rgba(74,90,112,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
     }
     button:hover {
       background-color: #1f3a5f;
-      box-shadow: 0 6px 18px rgba(31,58,95,0.5);
-      transform: translateY(-2px);
+      box-shadow: 0 14px 36px rgba(31,58,95,0.7);
+      transform: translateY(-4px);
     }
     button:active {
       transform: translateY(1px);
       box-shadow: none;
     }
+
+    /* Tabela Admin */
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 30px;
+      margin-top: 36px;
       color: #1f3a5f;
       font-size: 1rem;
-      border-radius: 8px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(31,58,95,0.1);
+      box-shadow: 0 8px 28px rgba(31,58,95,0.15);
     }
     thead {
-      background-color: #e1e6f0;
+      background-color: #2c4664;
     }
     thead th {
-      padding: 14px 12px;
+      padding: 16px 14px;
       text-align: left;
       font-weight: 700;
-      border-bottom: 2px solid #c0c7d6;
-      color: #1f3a5f;
-      letter-spacing: 0.8px;
+      border-bottom: 3px solid #18314f;
+      color: #e6f0ff;
+      letter-spacing: 0.9px;
+      user-select: none;
     }
     tbody tr {
       border-bottom: 1px solid #dbe1ec;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.25s ease;
     }
     tbody tr:hover {
-      background-color: #f0f4fb;
+      background-color: #dce7f7;
     }
     tbody td {
-      padding: 14px 10px;
+      padding: 16px 14px;
       vertical-align: middle;
+      user-select: text;
     }
+
+    /* Status cores */
     tbody tr.pendente {
       background-color: #fef1f1;
       color: #a42b2b;
@@ -193,19 +223,23 @@
       color: #2a4da0;
       font-weight: 600;
     }
+
+    /* Botões ação na tabela */
     .btn-table {
       background-color: #4a5a70;
       color: #fff;
       border: none;
-      border-radius: 6px;
-      padding: 7px 16px;
-      font-weight: 600;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-weight: 700;
       cursor: pointer;
-      margin-right: 8px;
-      font-size: 0.9rem;
-      transition: background-color 0.3s ease;
+      margin-right: 10px;
+      font-size: 1rem;
+      transition: background-color 0.3s ease, transform 0.15s ease;
       user-select: none;
-      min-width: 90px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .btn-table:hover {
       background-color: #1f3a5f;
@@ -213,11 +247,13 @@
     .btn-table:active {
       transform: scale(0.95);
     }
+
+    /* Filtros no admin */
     #adminView > div {
       display: flex;
       flex-wrap: wrap;
-      gap: 22px;
-      margin-bottom: 20px;
+      gap: 28px;
+      margin-bottom: 28px;
       align-items: center;
       justify-content: start;
     }
@@ -226,19 +262,21 @@
       font-weight: 600;
       color: #4a5a70;
       font-size: 1rem;
-      min-width: 130px;
+      min-width: 140px;
+      user-select: none;
     }
     #adminView select,
     #adminView input[type=text] {
-      max-width: 200px;
-      padding: 10px 14px;
-      border-radius: 6px;
+      max-width: 220px;
+      padding: 12px 18px;
+      border-radius: 8px;
       border: 1.8px solid #d1d9e6;
       background-color: #fafbfc;
       color: #1f3a5f;
       font-family: 'Inter', sans-serif;
       transition: border-color 0.3s ease;
       font-size: 1rem;
+      user-select: text;
     }
     #adminView select:hover,
     #adminView input[type=text]:hover {
@@ -248,25 +286,27 @@
     #adminView select:focus {
       outline: none;
       border-color: #1f3a5f;
-      box-shadow: 0 0 10px rgba(31,58,95,0.3);
+      box-shadow: 0 0 14px rgba(31,58,95,0.4);
       color: #1f3a5f;
       background-color: #fff;
     }
+
+    /* Notificação sucesso */
     #notificacao {
       color: #1f3a5f;
       font-weight: 700;
-      font-size: 1.1rem;
-      margin-top: 15px;
+      font-size: 1.2rem;
+      margin-top: 20px;
       text-align: center;
       user-select: none;
-      min-height: 28px;
-      min-width: 300px;
-      transition: opacity 0.4s ease;
+      min-height: 30px;
     }
+
+    /* Responsivo */
     @media (max-width: 720px) {
       header {
         flex-direction: column;
-        gap: 12px;
+        gap: 14px;
         text-align: center;
       }
       nav {
@@ -281,11 +321,12 @@
       }
       button {
         width: 100%;
-        font-size: 1rem;
-        min-width: auto;
+        font-size: 1.1rem;
       }
-      nav button {
-        min-width: auto;
+      .btn-table {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 8px;
       }
     }
   </style>
@@ -301,9 +342,9 @@
     <button onclick="mostrarCampoSenha()">🔒 Admin</button>
   </nav>
 
-  <section id="formView" style="display:flex; flex-direction: column;">
+  <!-- Formulário -->
+  <div id="formView">
     <h2>Registro - Diário de Bordo</h2>
-
     <label for="nome">Nome:</label>
     <input type="text" id="nome" autocomplete="off" />
 
@@ -338,23 +379,25 @@
     <label for="obs">Observações:</label>
     <textarea id="obs" rows="3"></textarea>
 
-    <button id="btnEnviar">🚀 Enviar</button>
-    <div id="notificacao" aria-live="polite" role="status"></div>
-  </section>
+    <button onclick="enviarFormulario()">🚀 Enviar</button>
+    <div id="notificacao"></div>
+  </div>
 
-  <section id="senhaAdmin" style="display:none; flex-direction: column;">
+  <!-- Login senha admin -->
+  <div id="senhaAdmin">
     <h2>🔐 Acesso Restrito</h2>
     <label for="senha">Digite a senha de administrador:</label>
     <input type="password" id="senha" placeholder="Senha" autocomplete="off" />
-    <button id="btnEntrar">Entrar</button>
-  </section>
+    <button onclick="validarSenha()">Entrar</button>
+  </div>
 
-  <section id="adminView" style="display:none; flex-direction: column;">
+  <!-- Painel Administrativo -->
+  <div id="adminView">
     <h2>📊 Painel Administrativo</h2>
 
     <div>
       <label for="filtroStatus">Filtrar por status:</label>
-      <select id="filtroStatus">
+      <select id="filtroStatus" onchange="filtrarChamados()">
         <option value="Todos">Todos</option>
         <option value="Pendente">Pendente</option>
         <option value="Em tratativa">Em tratativa</option>
@@ -362,7 +405,7 @@
       </select>
 
       <label for="filtroPlataforma">Plataforma:</label>
-      <select id="filtroPlataforma">
+      <select id="filtroPlataforma" onchange="filtrarChamados()">
         <option value="Todas">Todas</option>
         <option>Botmaker</option>
         <option>Olos</option>
@@ -372,7 +415,7 @@
       </select>
 
       <label for="buscaNome">Buscar por nome:</label>
-      <input type="text" id="buscaNome" placeholder="Digite um nome" />
+      <input type="text" id="buscaNome" oninput="filtrarChamados()" placeholder="Digite um nome" />
     </div>
 
     <table id="tabelaChamados" aria-label="Tabela de chamados">
@@ -386,255 +429,230 @@
           <th>Data</th>
           <th>Hora</th>
           <th>Status</th>
-          <th>Ação</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
+    <button onclick="exportarExcel()">📄 Exportar para Excel</button>
+  </div>
 
-    <button id="btnExportar">📄 Exportar para Excel</button>
-  </section>
+  <script>
+    const senhaCorreta = "admin123";
+    const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyaUlvGoiPbYjrfoPHarYnEV4fcx2gzeE-v3cbESxowFXo1V93gBBnp_RUr_Y7M8Zqg/exec";
 
-<script>
-(() => {
-  const senhaCorreta = "admin123";
-  const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyaUlvGoiPbYjrfoPHarYnEV4fcx2gzeE-v3cbESxowFXo1V93gBBnp_RUr_Y7M8Zqg/exec";
+    let chamados = [];
 
-  // Elementos
-  const formView = document.getElementById('formView');
-  const adminView = document.getElementById('adminView');
-  const senhaAdmin = document.getElementById('senhaAdmin');
-
-  const btnEnviar = document.getElementById('btnEnviar');
-  const btnEntrar = document.getElementById('btnEntrar');
-  const btnExportar = document.getElementById('btnExportar');
-
-  const filtroStatus = document.getElementById('filtroStatus');
-  const filtroPlataforma = document.getElementById('filtroPlataforma');
-  const buscaNome = document.getElementById('buscaNome');
-
-  const notificacao = document.getElementById('notificacao');
-
-  const tabelaBody = document.querySelector("#tabelaChamados tbody");
-
-  // Mostra só a view informada
-  function toggleView(viewId) {
-    formView.style.display = 'none';
-    adminView.style.display = 'none';
-    senhaAdmin.style.display = 'none';
-
-    if (viewId === 'formView') formView.style.display = 'flex';
-    else if (viewId === 'adminView') adminView.style.display = 'flex';
-    else if (viewId === 'senhaAdmin') senhaAdmin.style.display = 'flex';
-  }
-
-  function mostrarCampoSenha() {
-    toggleView('senhaAdmin');
-  }
-
-  // Validação senha admin
-  function validarSenha() {
-    const senha = document.getElementById("senha").value;
-    if (senha === senhaCorreta) {
-      toggleView('adminView');
-      carregarChamados();
-      limparNotificacao();
-    } else {
-      alert("Senha incorreta.");
+    // Alterna visibilidade das views
+    function toggleView(viewId) {
+      document.getElementById('formView').style.display = 'none';
+      document.getElementById('adminView').style.display = 'none';
+      document.getElementById('senhaAdmin').style.display = 'none';
+      document.getElementById(viewId).style.display = 'flex';
     }
+
+    // Mostrar campo senha para admin
+    function mostrarCampoSenha() {
+      toggleView('senhaAdmin');
+    }
+
+    // Valida senha e abre painel admin
+    function validarSenha() {
+      const senha = document.getElementById("senha").value;
+      if (senha === senhaCorreta) {
+        toggleView('adminView');
+        buscarChamados();
+      } else {
+        alert("Senha incorreta.");
+      }
+    }
+
+    // Enviar formulário para Google Sheets via POST
+    async function enviarFormulario() {
+      const nome = document.getElementById("nome").value.trim();
+      const cargo = document.getElementById("cargo").value;
+      const plataforma = document.getElementById("plataforma").value;
+      const motivo = document.getElementById("motivo").value;
+      const obs = document.getElementById("obs").value.trim();
+
+      if (!nome) {
+        alert("Por favor, preencha o nome.");
+        return;
+      }
+
+      const dataAtual = new Date();
+      const data = dataAtual.toLocaleDateString('pt-BR');
+      const hora = dataAtual.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+      // Criar um id único simples (timestamp + aleatório)
+      const id = Date.now() + "-" + Math.floor(Math.random() * 1000);
+
+      const registro = {
+        id, nome, cargo, plataforma, motivo, obs, data, hora, status: "Pendente"
+      };
+
+      try {
+        const res = await fetch(GOOGLE_SHEET_WEBAPP_URL, {
+          method: "POST",
+          body: JSON.stringify(registro),
+          headers: { "Content-Type": "application/json" }
+        });
+
+        if (!res.ok) throw new Error("Erro ao enviar os dados.");
+
+        // Limpar formulário e mostrar sucesso
+        document.querySelectorAll('#formView input[type=text], #formView textarea').forEach(el => el.value = '');
+        document.getElementById("notificacao").textContent = "✅ Chamado registrado com sucesso!";
+        setTimeout(() => document.getElementById("notificacao").textContent = "", 4000);
+      } catch (err) {
+        alert(err.message || "Erro na conexão com o Google Sheets.");
+      }
+    }
+
+    // Buscar chamados do Google Sheets via GET
+    async function buscarChamados() {
+      try {
+        const res = await fetch(GOOGLE_SHEET_WEBAPP_URL);
+        chamados = await res.json();
+        filtrarChamados();
+      } catch {
+        alert("Erro ao buscar chamados do Google Sheets.");
+      }
+    }
+
+  // Filtrar e atualizar tabela
+  function filtrarChamados() {
+    const filtroStatus = document.getElementById("filtroStatus").value;
+    const filtroPlataforma = document.getElementById("filtroPlataforma").value;
+    const buscaNome = document.getElementById("buscaNome").value.toLowerCase();
+
+    const filtrados = chamados.filter(c => {
+      // Filtra status
+      const statusOK = filtroStatus === "Todos" || c.status === filtroStatus;
+      // Filtra plataforma
+      const plataformaOK = filtroPlataforma === "Todas" || c.plataforma === filtroPlataforma;
+      // Filtra nome
+      const nomeOK = c.nome.toLowerCase().includes(buscaNome);
+
+      return statusOK && plataformaOK && nomeOK;
+    });
+
+    montarTabela(filtrados);
   }
 
-  // Envia formulário para o Google Sheets via fetch POST
-  async function enviarFormulario() {
-    limparNotificacao();
+  // Monta a tabela na tela com os dados filtrados
+  function montarTabela(lista) {
+    const tbody = document.querySelector("#tabelaChamados tbody");
+    tbody.innerHTML = "";
 
-    const nome = document.getElementById("nome").value.trim();
-    const cargo = document.getElementById("cargo").value;
-    const plataforma = document.getElementById("plataforma").value;
-    const motivo = document.getElementById("motivo").value;
-    const obs = document.getElementById("obs").value.trim();
-
-    if (!nome) {
-      alert("Por favor, preencha o nome.");
+    if (lista.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:20px;">Nenhum chamado encontrado.</td></tr>`;
       return;
     }
 
-    const dataAtual = new Date();
-    const data = dataAtual.toLocaleDateString('pt-BR');
-    const hora = dataAtual.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-    const registro = {
-      nome, cargo, plataforma, motivo, obs, data, hora, status: "Pendente"
-    };
-
-    try {
-      const res = await fetch(GOOGLE_SHEET_WEBAPP_URL, {
-        method: "POST",
-        body: JSON.stringify(registro),
-        headers: { "Content-Type": "application/json" }
-      });
-
-      if (!res.ok) throw new Error("Erro ao enviar os dados.");
-
-      // Limpar campos
-      document.getElementById("nome").value = "";
-      document.getElementById("cargo").selectedIndex = 0;
-      document.getElementById("plataforma").selectedIndex = 0;
-      document.getElementById("motivo").selectedIndex = 0;
-      document.getElementById("obs").value = "";
-
-      mostrarNotificacao("✅ Chamado registrado com sucesso!", false);
-
-    } catch (error) {
-      alert(error.message || "Erro na conexão com o Google Sheets.");
-    }
-  }
-
-  // Buscar e exibir chamados no admin
-  async function carregarChamados() {
-    limparNotificacao();
-
-    try {
-      const res = await fetch(GOOGLE_SHEET_WEBAPP_URL);
-      if (!res.ok) throw new Error("Erro ao carregar chamados.");
-      let chamados = await res.json();
-
-      // Ordenar por data + hora desc
-      chamados.sort((a,b) => {
-        const dtA = new Date(a.data.split('/').reverse().join('-') + 'T' + a.hora + ':00');
-        const dtB = new Date(b.data.split('/').reverse().join('-') + 'T' + b.hora + ':00');
-        return dtB - dtA;
-      });
-
-      // Filtrar
-      const statusFiltro = filtroStatus.value;
-      const plataformaFiltro = filtroPlataforma.value;
-      const nomeBusca = buscaNome.value.trim().toLowerCase();
-
-      const filtrados = chamados.filter(item => {
-        let condStatus = (statusFiltro === 'Todos') || (item.status === statusFiltro);
-        let condPlataforma = (plataformaFiltro === 'Todas') || (item.plataforma === plataformaFiltro);
-        let condNome = !nomeBusca || item.nome.toLowerCase().includes(nomeBusca);
-        return condStatus && condPlataforma && condNome;
-      });
-
-      popularTabela(filtrados);
-      mostrarNotificacao(`🔄 ${filtrados.length} chamados carregados.`);
-    } catch (error) {
-      alert(error.message || "Erro na conexão com o Google Sheets.");
-    }
-  }
-
-  // Preenche tabela admin
-  function popularTabela(chamados) {
-    tabelaBody.innerHTML = "";
-
-    if (chamados.length === 0) {
-      tabelaBody.innerHTML = `<tr><td colspan="9" style="text-align:center; font-weight:600; padding: 30px;">Nenhum chamado encontrado</td></tr>`;
-      return;
-    }
-
-    chamados.forEach(item => {
+    lista.forEach(c => {
       const tr = document.createElement("tr");
-      tr.className = item.status.toLowerCase().replace(/\s/g, '');
+
+      // Classe para colorir status
+      let classeStatus = "";
+      if (c.status === "Pendente") classeStatus = "pendente";
+      else if (c.status === "Em tratativa") classeStatus = "tratativa";
+      else if (c.status === "Resolvido") classeStatus = "resolvido";
+      tr.classList.add(classeStatus);
 
       tr.innerHTML = `
-        <td>${escapeHtml(item.nome)}</td>
-        <td>${escapeHtml(item.cargo)}</td>
-        <td>${escapeHtml(item.plataforma)}</td>
-        <td>${escapeHtml(item.motivo)}</td>
-        <td>${escapeHtml(item.obs)}</td>
-        <td>${escapeHtml(item.data)}</td>
-        <td>${escapeHtml(item.hora)}</td>
-        <td>${escapeHtml(item.status)}</td>
+        <td>${c.nome}</td>
+        <td>${c.cargo}</td>
+        <td>${c.plataforma}</td>
+        <td>${c.motivo}</td>
+        <td>${c.obs}</td>
+        <td>${c.data}</td>
+        <td>${c.hora}</td>
         <td>
-          <button class="btn-table" onclick="atualizarStatus('${item.nome}', '${item.data}', '${item.hora}', 'Pendente')">Pendente</button>
-          <button class="btn-table" onclick="atualizarStatus('${item.nome}', '${item.data}', '${item.hora}', 'Em tratativa')">Em tratativa</button>
-          <button class="btn-table" onclick="atualizarStatus('${item.nome}', '${item.data}', '${item.hora}', 'Resolvido')">Resolvido</button>
+          <select onchange="alterarStatus('${c.id}', this.value)">
+            <option value="Pendente" ${c.status === "Pendente" ? "selected" : ""}>Pendente</option>
+            <option value="Em tratativa" ${c.status === "Em tratativa" ? "selected" : ""}>Em tratativa</option>
+            <option value="Resolvido" ${c.status === "Resolvido" ? "selected" : ""}>Resolvido</option>
+          </select>
+        </td>
+        <td>
+          <button class="btn-table" onclick="copiarProtocolo('${c.id}')">Copiar Protocolo</button>
         </td>
       `;
-      tabelaBody.appendChild(tr);
+      tbody.appendChild(tr);
     });
   }
 
-  // Atualiza status do chamado (chave = nome+data+hora)
-  async function atualizarStatus(nome, data, hora, novoStatus) {
-    // Confirma alteração
-    if (!confirm(`Confirma alterar status para "${novoStatus}"?`)) return;
-
+  // Atualiza o status no Google Sheets via POST
+  async function alterarStatus(id, novoStatus) {
     try {
-      // Enviar patch para o Google Apps Script para alterar o status
-      // Para isso, o seu Apps Script precisa suportar método PATCH/PUT e atualizar status por chave.
-      // Aqui simulamos o envio via POST com operação de atualização.
-
-      const payload = { nome, data, hora, status: novoStatus, acao: "atualizarStatus" };
-
       const res = await fetch(GOOGLE_SHEET_WEBAPP_URL, {
         method: "POST",
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ id, status: novoStatus }),
         headers: { "Content-Type": "application/json" }
       });
-
       if (!res.ok) throw new Error("Erro ao atualizar status.");
 
-      mostrarNotificacao(`✅ Status atualizado para "${novoStatus}".`, false);
-      carregarChamados();
-
-    } catch (error) {
-      alert(error.message || "Erro na atualização de status.");
+      // Atualiza localmente o status no array
+      const idx = chamados.findIndex(c => c.id === id);
+      if (idx > -1) {
+        chamados[idx].status = novoStatus;
+        filtrarChamados();
+      }
+    } catch (err) {
+      alert(err.message || "Erro na atualização do status.");
     }
   }
 
-  // Exportar dados exibidos para Excel
-  function exportarExcel() {
-    const table = document.getElementById('tabelaChamados');
-    const wb = XLSX.utils.table_to_book(table, { sheet: "Chamados" });
-    XLSX.writeFile(wb, "Chamados_DiarioDeBordo.xlsx");
-  }
-
-  // Notificação na interface
-  function mostrarNotificacao(msg, erro = true) {
-    notificacao.style.opacity = 1;
-    notificacao.textContent = msg;
-    notificacao.style.color = erro ? "#a42b2b" : "#2a4da0";
-
-    setTimeout(() => {
-      notificacao.style.opacity = 0;
-    }, 4000);
-  }
-  function limparNotificacao() {
-    notificacao.textContent = "";
-    notificacao.style.opacity = 0;
-  }
-
-  // Função para escapar HTML e evitar injeção na tabela
-  function escapeHtml(text) {
-    if (!text) return "";
-    return text.replace(/[&<>"']/g, (m) => {
-      switch (m) {
-        case "&": return "&amp;";
-        case "<": return "&lt;";
-        case ">": return "&gt;";
-        case '"': return "&quot;";
-        case "'": return "&#39;";
-        default: return m;
-      }
+  // Copiar protocolo (id) para área de transferência
+  function copiarProtocolo(id) {
+    navigator.clipboard.writeText(id).then(() => {
+      alert("Protocolo copiado: " + id);
+    }).catch(() => {
+      alert("Erro ao copiar protocolo.");
     });
   }
 
-  // Eventos
-  btnEnviar.addEventListener("click", enviarFormulario);
-  btnEntrar.addEventListener("click", validarSenha);
-  btnExportar.addEventListener("click", exportarExcel);
+  // Exportar dados filtrados para Excel (.xlsx)
+  function exportarExcel() {
+    const filtroStatus = document.getElementById("filtroStatus").value;
+    const filtroPlataforma = document.getElementById("filtroPlataforma").value;
+    const buscaNome = document.getElementById("buscaNome").value.toLowerCase();
 
-  filtroStatus.addEventListener("change", carregarChamados);
-  filtroPlataforma.addEventListener("change", carregarChamados);
-  buscaNome.addEventListener("input", carregarChamados);
+    const filtrados = chamados.filter(c => {
+      const statusOK = filtroStatus === "Todos" || c.status === filtroStatus;
+      const plataformaOK = filtroPlataforma === "Todas" || c.plataforma === filtroPlataforma;
+      const nomeOK = c.nome.toLowerCase().includes(buscaNome);
+      return statusOK && plataformaOK && nomeOK;
+    });
 
-  // Inicialização
-  toggleView('formView');
-})();
+    if (filtrados.length === 0) {
+      alert("Nenhum dado para exportar.");
+      return;
+    }
+
+    // Prepara dados para Excel
+    const dadosExcel = filtrados.map(c => ({
+      Protocolo: c.id,
+      Nome: c.nome,
+      Cargo: c.cargo,
+      Plataforma: c.plataforma,
+      Motivo: c.motivo,
+      Observações: c.obs,
+      Data: c.data,
+      Hora: c.hora,
+      Status: c.status
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(dadosExcel);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Chamados");
+    XLSX.writeFile(wb, "DiarioDeBordo.xlsx");
+  }
+
+  // Ao carregar a página, mostrar o formulário por padrão
+  window.onload = () => {
+    toggleView('formView');
+  };
 </script>
 
-</body>
-</html>
